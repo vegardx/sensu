@@ -25,7 +25,7 @@ sensu = data_bag_item("sensu", "ssl")
 # Generate passwords
 node.set_unless['api']['password'] = random_string(20)
 node.set_unless['rabbitmq']['password'] = random_string(20)
-node.default_unless['sensu']['host'] = node[:hostname]
+node.default['sensu']['host'] = node[:hostname]
 
 apt_repository 'rabbitmq' do
   uri          'http://www.rabbitmq.com/debian/'
@@ -118,11 +118,14 @@ end
         end
 end
 
+sensu_server = search(:node, 'role:sensu-server')
+
 template "/etc/sensu/conf.d/rabbitmq.json" do
         source "rabbitmq.json.erb"
         mode 0644
         owner   "root"
         group   "root"
+	variables :sensu_server => sensu_server
         notifies :restart, resources(:service => "sensu-server"), :delayed
 end
 

@@ -1,13 +1,15 @@
+<% @sensu_server.each do |sensu| -%>
 {
   "rabbitmq": {
     "ssl": {
       "cert_chain_file": "/etc/sensu/ssl/cert.pem",
       "private_key_file": "/etc/sensu/ssl/key.pem"
     },
-    "host": "<%= node['sensu']['host'] %>",
+    "host": "<%= sensu['sensu']['host'] %>",
     "port": 5671,
     "vhost": "/sensu",
-    "user": "<%= node['rabbitmq']['user'] %>",
-    "password": "<%= node['rabbitmq']['password'] %>"
+    "user": "<%= sensu['rabbitmq']['user'] %>",
+    "password": "<%= sensu['rabbitmq']['password'] %>"
   }
 }
+<% end -%>

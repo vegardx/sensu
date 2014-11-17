@@ -19,6 +19,9 @@
 
 # Install/configure something here
 
+# Load keys for SSL
+sensu = data_bag_item("sensu", "ssl")
+
 %w{ ruby1.9.1-dev build-essential }.each do |pkg|
         package pkg
 end
@@ -32,11 +35,23 @@ service "sensu-client" do
         supports :status => true, :restart => true, :reload => true, :stop => true
 end
 
+directory "/etc/sensu/ssl" do
+        recursive true
+end
+
+%w{ cert key }.each do |item|
+        file "/etc/sensu/ssl/#{item}.pem" do
+                content sensu["client"][item]
+        end
+end
+
+sensu_server = search(:node, 'role:sensu-server')
 template "/etc/sensu/conf.d/rabbitmq.json" do
         source "rabbitmq.json.erb"
         mode 0644
         owner   "root"
         group   "root"
+	variables :sensu_server => sensu_server
         notifies :restart, resources(:service => "sensu-client"), :delayed
 end
 
