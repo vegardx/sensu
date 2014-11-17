@@ -42,18 +42,20 @@ end
 %w{ cert key }.each do |item|
         file "/etc/sensu/ssl/#{item}.pem" do
                 content sensu["client"][item]
+		mode "0644"
         end
 end
 
 sensu_server = search(:node, 'role:sensu-server')
+node.set[:rabbitmq][:password] = sensu_server.first["rabbitmq"]["password"]
+node.set[:rabbitmq][:user] = sensu_server.first["rabbitmq"]["user"]
+node.set[:sensu][:host] = sensu_server.first["sensu"]["host"]
 
 template "/etc/sensu/conf.d/rabbitmq.json" do
-        source "rabbitmq-client.json.erb"
+        source "rabbitmq.json.erb"
         mode 0644
         owner   "root"
         group   "root"
-	action :create_if_missing
-	variables :sensu_server => sensu_server
         notifies :restart, resources(:service => "sensu-client"), :delayed
 end
 

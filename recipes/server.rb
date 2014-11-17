@@ -49,11 +49,6 @@ service "sensu-api" do
         supports :status => true, :restart => true, :reload => true, :stop => true
 end
 
-service "sensu-client" do
-        action [ :enable ]
-        supports :status => true, :restart => true, :reload => true, :stop => true
-end
-
 service "rabbitmq-server" do
         action [ :enable ]
         supports :status => true, :restart => true, :reload => true, :stop => true
