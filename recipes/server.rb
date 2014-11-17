@@ -22,6 +22,11 @@
 # Load keys for SSL
 sensu = data_bag_item("sensu", "ssl")
 
+# Generate passwords
+node.set_unless['api']['password'] = random_string(20)
+node.set_unless['rabbitmq']['password'] = random_string(20)
+node.default_unless['sensu']['host'] = node[:hostname]
+
 apt_repository 'rabbitmq' do
   uri          'http://www.rabbitmq.com/debian/'
   components   ['testing', 'main']
@@ -75,6 +80,32 @@ template "/etc/rabbitmq/rabbitmq.config" do
 	owner	"root"
 	group	"root"
 	notifies :restart, resources(:service => "rabbitmq-server"), :delayed
+end
+
+execute "rabbitmq-vhost" do
+	command "rabbitmqctl add_vhost /sensu"
+	notifies :create, "ruby_block[rabbitmqinit]", :delayed
+	not_if { node.attribute?("rabbitmqinit") }
+end
+
+execute "rabbitmq-user" do
+	command "rabbitmqctl add_user sensu #{node[:rabbitmq][:password]}" 
+	notifies :create, "ruby_block[rabbitmqinit]", :delayed
+	not_if { node.attribute?("rabbitmqinit") }
+end
+
+execute "rabbitmq-permission" do
+	command "rabbitmqctl set_permissions -p /sensu sensu \".*\" \".*\" \".*\""
+	notifies :create, "ruby_block[rabbitmqinit]", :delayed
+	not_if { node.attribute?("rabbitmqinit") }
+end
+
+ruby_block "rabbitmqinit" do
+	block do
+		node.set['rabbitmqinit'] = true
+		node.save
+	end
+	action :nothing
 end
 
 directory "/etc/sensu/ssl" do

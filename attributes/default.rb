@@ -17,4 +17,5 @@
 # limitations under the License.
 #
 
-# Set meaningful node attributes here
+default["api"]["user"] = "admin"
+default["rabbitmq"]["user"] = "sensu"
