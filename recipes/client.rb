@@ -46,11 +46,13 @@ end
 end
 
 sensu_server = search(:node, 'role:sensu-server')
+
 template "/etc/sensu/conf.d/rabbitmq.json" do
-        source "rabbitmq.json.erb"
+        source "rabbitmq-client.json.erb"
         mode 0644
         owner   "root"
         group   "root"
+	action :create_if_missing
 	variables :sensu_server => sensu_server
         notifies :restart, resources(:service => "sensu-client"), :delayed
 end
