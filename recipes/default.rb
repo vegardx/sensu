@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: skeleton
+# Cookbook Name:: sensu
 # Recipe:: default
 #
 # Copyright (C) YEAR YOUR_NAME <YOUR_EMAIL>
@@ -16,8 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-# Install/configure something here
 
 apt_repository 'sensu' do
   uri          'http://repos.sensuapp.org/apt'

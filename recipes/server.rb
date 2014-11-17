@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: sensu
-# Recipe:: redis-server
+# Recipe:: server
 #
 # Copyright (C) YEAR YOUR_NAME <YOUR_EMAIL>
 #

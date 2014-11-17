@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: skeleton
-# Recipe:: default
+# Cookbook Name:: sensu
+# Recipe:: client
 #
 # Copyright (C) YEAR YOUR_NAME <YOUR_EMAIL>
 #
