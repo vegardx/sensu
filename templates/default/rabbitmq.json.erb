@@ -7,7 +7,7 @@
     "host": "<%= node['sensu']['host'] %>",
     "port": 5671,
     "vhost": "/sensu",
-    "user": "<%= node['rabbitmq']['user'] %>",
-    "password": "<%= node['rabbitmq']['password'] %>"
+    "user": "<%= node['sensu']['rabbitmq']['user'] %>",
+    "password": "<%= node['sensu']['rabbitmq']['password'] %>"
   }
 }

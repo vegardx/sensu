@@ -23,8 +23,8 @@
 sensu = data_bag_item("sensu", "ssl")
 
 # Generate passwords
-node.set_unless['api']['password'] = random_string(20)
-node.set_unless['rabbitmq']['password'] = random_string(20)
+node.set_unless['sensu']['api']['password'] = random_string(20)
+node.set_unless['sensu']['rabbitmq']['password'] = random_string(20)
 node.set_unless['sensu']['host'] = node[:hostname]
 
 apt_repository 'rabbitmq' do
@@ -84,7 +84,7 @@ execute "rabbitmq-vhost" do
 end
 
 execute "rabbitmq-user" do
-	command "rabbitmqctl add_user sensu #{node[:rabbitmq][:password]}" 
+	command "rabbitmqctl add_user sensu #{node[:sensu][:rabbitmq][:password]}" 
 	notifies :create, "ruby_block[rabbitmqinit]", :delayed
 	not_if { node.attribute?("rabbitmqinit") }
 end

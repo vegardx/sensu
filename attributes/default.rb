@@ -17,5 +17,5 @@
 # limitations under the License.
 #
 
-default["api"]["user"] = "admin"
-default["rabbitmq"]["user"] = "sensu"
+default["sensu"]["api"]["user"] = "admin"
+default["sensu"]["rabbitmq"]["user"] = "sensu"

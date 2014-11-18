@@ -1,3 +1,3 @@
 # Tool to generate SSL certificates.
 
-On a production system you might want to double check what this actually does.
+Generate server and client certificates for rabbitmq. Upload the contents of ssl.json to the data bag `sensu ssl`.

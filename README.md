@@ -1,7 +1,7 @@
 Sensu Cookbook
 =================
 
-A simpler and easier to maintain cookbook for Sensu.
+A simpler and easier to maintain cookbook for Sensu. Only tested on Debian 7.
 
 Requirements
 ------------
@@ -13,27 +13,3 @@ Requirements
 ### Cookbooks:
 
 * apt
-
-### Other:
-
-I should document this better.
-
-Attributes
-----------
-
-None.
-
-Recipes
--------
-
-### sensu::default
-
-Install Sensu, but do not configure. 
-
-### sensu::server
-
-Install and configure Sensu server, rabbitmq and redis.
-
-### sensu::client
-
-Configure Sensu client and connect to a Sensu server

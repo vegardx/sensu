@@ -47,8 +47,8 @@ end
 end
 
 sensu_server = search(:node, 'role:sensu-server')
-node.set[:rabbitmq][:password] = sensu_server.first["rabbitmq"]["password"]
-node.set[:rabbitmq][:user] = sensu_server.first["rabbitmq"]["user"]
+node.set[:sensu][:rabbitmq][:password] = sensu_server.first['sensu']["rabbitmq"]["password"]
+node.set[:sensu][:rabbitmq][:user] = sensu_server.first['sensu']["rabbitmq"]["user"]
 node.set[:sensu][:host] = sensu_server.first["sensu"]["host"]
 
 template "/etc/sensu/conf.d/rabbitmq.json" do
