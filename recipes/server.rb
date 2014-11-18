@@ -95,6 +95,12 @@ execute "rabbitmq-permission" do
 	not_if { node.attribute?("rabbitmqinit") }
 end
 
+execute "rabbitmq-delete" do
+        command "rabbitmqctl delete_user guest"
+        notifies :create, "ruby_block[rabbitmqinit]", :delayed
+        not_if { node.attribute?("rabbitmqinit") }
+end
+
 ruby_block "rabbitmqinit" do
 	block do
 		node.set['rabbitmqinit'] = true
