@@ -9,6 +9,7 @@ Requirements
 ### Platform:
 
 * Debian 7
+* Ubuntu 14.04
 
 ### Cookbooks:
 
