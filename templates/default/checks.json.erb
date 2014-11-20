@@ -1,0 +1,47 @@
+{
+  "checks": {
+    "check_cpu": {
+      "command": "check-cpu.rb",
+      "subscribers": [ "base" ],
+      "interval": 10
+    },
+    "check_load": {
+      "command": "check-load.rb",
+      "subscribers": [ "base" ],
+      "interval": 10
+    },
+    "check_disk": {
+      "command": "check-disk.rb",
+      "subscribers": [ "base" ],
+      "interval": 10
+    },
+    "check_hardware_fail": {
+      "command": "check-hardware-fail.rb",
+      "subscribers": [ "base" ],
+      "interval": 10
+    },
+    "load_metrics": {
+      "type": "metric",
+      "command": "load-metrics.rb",
+      "interval": 10,
+      "subscribers": ["base"],
+      "handlers": ["relay"]
+    },
+    "memory_metrics": {
+      "type": "metric",
+      "command": "memory-metrics.rb",
+      "interval": 10,
+      "subscribers": ["base"],
+      "handlers": ["relay"]
+    },
+    "cpu_metrics": {
+      "type": "metric",
+      "command": "cpu-metrics.rb",
+      "interval": 10,
+      "subscribers": ["base"],
+      "handlers": ["relay"]
+    }
+  }
+}
+
+

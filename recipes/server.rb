@@ -135,6 +135,38 @@ template "/etc/sensu/conf.d/redis.json" do
         notifies :restart, resources(:service => "sensu-server"), :delayed
 end
 
+%w{ handlers mutators }.each do |item|
+	directory "/etc/sensu/extensions/#{item}" do
+		recursive true
+	end
+end
+
+cookbook_file "relay.rb" do
+        path "/etc/sensu/extensions/handlers/relay.rb"
+        action :create
+        mode 0644
+        owner "root"
+        group "root"
+        notifies :restart, resources(:service => "sensu-server"), :delayed
+end
+
+cookbook_file "metrics.rb" do
+        path "/etc/sensu/extensions/mutators/metrics.rb"
+        action :create
+        mode 0644
+        owner "root"
+        group "root"
+        notifies :restart, resources(:service => "sensu-server"), :delayed
+end
+
+template "/etc/sensu/conf.d/relay.json" do
+        source "relay.json.erb"
+        mode 0644
+        owner   "root"
+        group   "root"
+        notifies :restart, resources(:service => "sensu-server"), :delayed
+end
+
 template "/etc/sensu/conf.d/api.json" do
         source "api.json.erb"
         mode 0644
@@ -143,4 +175,10 @@ template "/etc/sensu/conf.d/api.json" do
         notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
-
+template "/etc/sensu/conf.d/checks.json" do
+        source "checks.json.erb"
+        mode 0644
+        owner   "root"
+        group   "root"
+        notifies :restart, resources(:service => "sensu-server"), :delayed
+end
