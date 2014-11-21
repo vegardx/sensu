@@ -25,7 +25,7 @@ sensu = data_bag_item("sensu", "ssl")
 # Generate passwords
 node.set_unless['sensu']['api']['password'] = random_string(20)
 node.set_unless['sensu']['rabbitmq']['password'] = random_string(20)
-node.set_unless['sensu']['host'] = node[:hostname]
+node.set_unless['sensu']['host'] = node[:fqdn]
 
 apt_repository 'rabbitmq' do
   uri          'http://www.rabbitmq.com/debian/'
@@ -125,6 +125,7 @@ template "/etc/sensu/conf.d/rabbitmq.json" do
         owner   "root"
         group   "root"
         notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
 template "/etc/sensu/conf.d/redis.json" do
@@ -133,6 +134,7 @@ template "/etc/sensu/conf.d/redis.json" do
         owner   "root"
         group   "root"
         notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
 %w{ handlers mutators }.each do |item|
@@ -148,6 +150,7 @@ cookbook_file "relay.rb" do
         owner "root"
         group "root"
         notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
 cookbook_file "metrics.rb" do
@@ -157,6 +160,7 @@ cookbook_file "metrics.rb" do
         owner "root"
         group "root"
         notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
 template "/etc/sensu/conf.d/relay.json" do
@@ -165,6 +169,7 @@ template "/etc/sensu/conf.d/relay.json" do
         owner   "root"
         group   "root"
         notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
 template "/etc/sensu/conf.d/api.json" do
@@ -172,6 +177,7 @@ template "/etc/sensu/conf.d/api.json" do
         mode 0644
         owner   "root"
         group   "root"
+	notifies :restart, resources(:service => "sensu-server"), :delayed
         notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
@@ -181,4 +187,5 @@ template "/etc/sensu/conf.d/checks.json" do
         owner   "root"
         group   "root"
         notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
 end

@@ -2,8 +2,13 @@
   "client": {
     "name": "<%= node[:fqdn] %>",
     "address": "<%= node[:ipaddress] %>",
+    "platform": "<%= node[:platform] %> <%= node[:platform_version] %>",
     "subscriptions": [
+    <% node.run_list.roles.each do |role| %>
+      "<%= role =%>",
+    <% end %>
       "base"
     ]
   }
 }
+

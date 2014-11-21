@@ -1,45 +1,54 @@
 {
   "checks": {
+    "check_apt": {
+      "command": "/usr/lib/nagios/plugins/check_apt",
+      "subscribers": [ "base" ],
+      "interval": 60
+    },
+    "check_apt_distupgrade": {
+      "command": "/usr/lib/nagios/plugins/check_apt -d",
+      "subscribers": [ "base" ],
+      "interval": 60
+    },
+    "check_load": {
+      "command": "/usr/lib/nagios/plugins/check_load -w 15,10,5 -c 30,25,20",
+      "subscribers": [ "base" ],
+      "interval": 60
+    },
+    "check_raid": {
+      "command": "check-raid.rb",
+      "subscribers": [ "base" ],
+      "interval": 60
+    },
+    "check_memory": {
+      "command": "check-mem.sh",
+      "subscribers": [ "base" ],
+      "interval": 60
+    },
     "check_cpu": {
       "command": "check-cpu.rb",
       "subscribers": [ "base" ],
-      "interval": 10
+      "interval": 60
     },
-    "check_load": {
-      "command": "check-load.rb",
+    "check_disk_fail": {
+      "command": "check-disk-fail.rb",
       "subscribers": [ "base" ],
-      "interval": 10
+      "interval": 60
     },
-    "check_disk": {
+    "check_disks": {
       "command": "check-disk.rb",
       "subscribers": [ "base" ],
-      "interval": 10
+      "interval": 60
+    },
+    "check_entropy": {
+      "command": "check-entropy.rb",
+      "subscribers": [ "base" ],
+      "interval": 60
     },
     "check_hardware_fail": {
       "command": "check-hardware-fail.rb",
       "subscribers": [ "base" ],
-      "interval": 10
-    },
-    "load_metrics": {
-      "type": "metric",
-      "command": "load-metrics.rb",
-      "interval": 10,
-      "subscribers": ["base"],
-      "handlers": ["relay"]
-    },
-    "memory_metrics": {
-      "type": "metric",
-      "command": "memory-metrics.rb",
-      "interval": 10,
-      "subscribers": ["base"],
-      "handlers": ["relay"]
-    },
-    "cpu_metrics": {
-      "type": "metric",
-      "command": "cpu-metrics.rb",
-      "interval": 10,
-      "subscribers": ["base"],
-      "handlers": ["relay"]
+      "interval": 60
     }
   }
 }

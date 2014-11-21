@@ -1,0 +1,4 @@
+examples/ssl_certs/client/*
+examples/ssl_certs/server/*
+examples/ssl_certs/sensu_ca/*
+examples/ssl_certs/ssl.json
