@@ -40,11 +40,11 @@ directory "/etc/sensu/ssl" do
 end
 
 %w{ cert key }.each do |item|
-        file "/etc/sensu/ssl/#{item}.pem" do
-                content sensu["client"][item]
-		mode "0644"
-		notifies :restart, resources(:service => "sensu-client"), :delayed
-        end
+    file "/etc/sensu/ssl/#{item}.pem" do
+        content sensu["client"][item]
+        mode "0644"
+        notifies :restart, resources(:service => "sensu-client"), :delayed
+    end
 end
 
 sensu_server = search(:node, 'role:sensu-server')
