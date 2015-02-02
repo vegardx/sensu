@@ -48,7 +48,7 @@ end
 service "sensu-server" do
 	action [ :enable ]
 	supports :status => true, :restart => true, :reload => true, :stop => true
-end		
+end
 
 service "sensu-api" do
         action [ :enable ]
@@ -90,7 +90,7 @@ execute "rabbitmq-vhost" do
 end
 
 execute "rabbitmq-user" do
-	command "rabbitmqctl add_user sensu #{node[:sensu][:rabbitmq][:password]}" 
+	command "rabbitmqctl add_user sensu #{node[:sensu][:rabbitmq][:password]}"
 	notifies :create, "ruby_block[rabbitmqinit]", :delayed
 	not_if { node.attribute?("rabbitmqinit") }
 end
@@ -143,68 +143,71 @@ template "/etc/sensu/conf.d/redis.json" do
         notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
-%w{ handlers mutators }.each do |item|
-	directory "/etc/sensu/extensions/#{item}" do
-		recursive true
-	end
-end
 
-cookbook_file "relay.rb" do
-        path "/etc/sensu/extensions/handlers/relay.rb"
-        action :create
-        mode 0644
-        owner "root"
-        group "root"
-        notifies :restart, resources(:service => "sensu-server"), :delayed
-        notifies :restart, resources(:service => "sensu-api"), :delayed
-end
+# # Create folders for extensions and mutators.
+# %w{ handlers mutators }.each do |item|
+# 	directory "/etc/sensu/extensions/#{item}" do
+# 		recursive true
+# 	end
+# end
 
-cookbook_file "metrics.rb" do
-        path "/etc/sensu/extensions/mutators/metrics.rb"
-        action :create
-        mode 0644
-        owner "root"
-        group "root"
-        notifies :restart, resources(:service => "sensu-server"), :delayed
-        notifies :restart, resources(:service => "sensu-api"), :delayed
-end
+# cookbook_file "relay.rb" do
+#         path "/etc/sensu/extensions/handlers/relay.rb"
+#         action :create
+#         mode 0644
+#         owner "root"
+#         group "root"
+#         notifies :restart, resources(:service => "sensu-server"), :delayed
+#         notifies :restart, resources(:service => "sensu-api"), :delayed
+# end
 
-cookbook_file "hipchat.rb" do
-        path "/etc/sensu/handlers/hipchat.rb"
-        action :create
-        mode 0755
-        owner "root"
-        group "root"
-        notifies :restart, resources(:service => "sensu-server"), :delayed
-        notifies :restart, resources(:service => "sensu-api"), :delayed
-end
+# cookbook_file "metrics.rb" do
+#         path "/etc/sensu/extensions/mutators/metrics.rb"
+#         action :create
+#         mode 0644
+#         owner "root"
+#         group "root"
+#         notifies :restart, resources(:service => "sensu-server"), :delayed
+#         notifies :restart, resources(:service => "sensu-api"), :delayed
+# end
 
-template "/etc/sensu/conf.d/hipchat.json" do
-        source "hipchat.json.erb"
-        mode 0644
-        owner   "root"
-        group   "root"
-        notifies :restart, resources(:service => "sensu-server"), :delayed
-        notifies :restart, resources(:service => "sensu-api"), :delayed
-end
+# # HipChat-integration
+# cookbook_file "hipchat.rb" do
+#         path "/etc/sensu/handlers/hipchat.rb"
+#         action :create
+#         mode 0755
+#         owner "root"
+#         group "root"
+#         notifies :restart, resources(:service => "sensu-server"), :delayed
+#         notifies :restart, resources(:service => "sensu-api"), :delayed
+# end
+#
+# template "/etc/sensu/conf.d/hipchat.json" do
+#         source "hipchat.json.erb"
+#         mode 0644
+#         owner   "root"
+#         group   "root"
+#         notifies :restart, resources(:service => "sensu-server"), :delayed
+#         notifies :restart, resources(:service => "sensu-api"), :delayed
+# end
 
-template "/etc/sensu/conf.d/handlers.json" do
-        source "handlers.json.erb"
-        mode 0644
-        owner   "root"
-        group   "root"
-        notifies :restart, resources(:service => "sensu-server"), :delayed
-        notifies :restart, resources(:service => "sensu-api"), :delayed
-end
+# template "/etc/sensu/conf.d/handlers.json" do
+#         source "handlers.json.erb"
+#         mode 0644
+#         owner   "root"
+#         group   "root"
+#         notifies :restart, resources(:service => "sensu-server"), :delayed
+#         notifies :restart, resources(:service => "sensu-api"), :delayed
+# end
 
-template "/etc/sensu/conf.d/relay.json" do
-        source "relay.json.erb"
-        mode 0644
-        owner   "root"
-        group   "root"
-        notifies :restart, resources(:service => "sensu-server"), :delayed
-        notifies :restart, resources(:service => "sensu-api"), :delayed
-end
+# template "/etc/sensu/conf.d/relay.json" do
+#         source "relay.json.erb"
+#         mode 0644
+#         owner   "root"
+#         group   "root"
+#         notifies :restart, resources(:service => "sensu-server"), :delayed
+#         notifies :restart, resources(:service => "sensu-api"), :delayed
+# end
 
 template "/etc/sensu/conf.d/api.json" do
         source "api.json.erb"
@@ -224,11 +227,11 @@ template "/etc/sensu/conf.d/checks.json" do
         notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
-template "/etc/sensu/conf.d/metrics.json" do
-        source "metrics.json.erb"
-        mode 0644
-        owner "root"
-        group "root"
-        notifies :restart, resources(:service => "sensu-server"), :delayed
-        notifies :restart, resources(:service => "sensu-api"), :delayed
-end
+# template "/etc/sensu/conf.d/metrics.json" do
+#         source "metrics.json.erb"
+#         mode 0644
+#         owner "root"
+#         group "root"
+#         notifies :restart, resources(:service => "sensu-server"), :delayed
+#         notifies :restart, resources(:service => "sensu-api"), :delayed
+# end

@@ -1,80 +1,92 @@
 {
-  "checks": {
-    "check_apt": {
-      "command": "/usr/lib/nagios/plugins/check_apt",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_apt_distupgrade": {
-      "command": "/usr/lib/nagios/plugins/check_apt -d",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_load": {
-      "command": "/usr/lib/nagios/plugins/check_load -w 15,10,5 -c 30,25,20",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_raid": {
-      "command": "check-raid.rb",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_memory": {
-      "command": "check-mem.sh",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_cpu": {
-      "command": "check-cpu.rb",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_disk_fail": {
-      "command": "check-disk-fail.rb",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_disks": {
-      "command": "check-disk.rb",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_entropy": {
-      "command": "check-entropy.rb",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_hardware_fail": {
-      "command": "check-hardware-fail.rb",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_dns_fqdn": {
-      "command": "/usr/lib/nagios/plugins/check_dig -l :::chef.fqdn::: -H 8.8.8.8 -a :::chef.ipaddress:::",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_reboot_required": {
-      "command": "check-file-exists.rb -w /var/run/reboot-required",
-      "subscribers": [ "base" ],
-      "interval": 60
-    },
-    "check_critical": {
-      "command": "check-file-exists.rb -c /var/critical",
-      "subscribers": [ "base" ],
-      "interval": 60,
-      "handlers": [
-        "hipchat" 
-      ]
-    },
-    "check_warning": {
-      "command": "check-file-exists.rb -w /var/warning",
-      "subscribers": [ "base" ],
-      "interval": 60,
-      "handlers": [
-        "hipchat" 
-      ]
+    "checks": {
+        "check_apt": {
+            "notification": "Packages available for upgrade",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_apt",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_apt_distupgrade": {
+            "notification": "Packages available for dist-upgrade",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_apt -d",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_load": {
+            "notification": "Load",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_load -w 15,10,5 -c 30,25,20",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_raid": {
+            "notification": "RAID",
+            "occurrences": 4,
+            "command": "check-raid.rb",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_memory": {
+            "notification": "Memory",
+            "occurrences": 4,
+            "command": "check-mem.sh -w 250 -c 100",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_cpu": {
+            "notification": "CPU Usage",
+            "occurrences": 4,
+            "command": "check-cpu.rb",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_disk_fail": {
+            "notification": "SMART Failure",
+            "occurrences": 1,
+            "command": "check-disk-fail.rb",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_disks": {
+            "notification": "Disk Space",
+            "occurrences": 4,
+            "command": "check-disk.rb",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_hardware_fail": {
+            "notification": "Hardware Failure",
+            "occurrences": 1,
+            "command": "check-hardware-fail.rb",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_chef": {
+            "notification": "Chef",
+            "occurrences": 15,
+            "command": "check-chef.sh",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_reboot_required": {
+            "notification": "Reboot Required",
+            "occurrences": 1,
+            "command": "check-file-exists.rb -w /var/run/reboot-required",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        }
     }
-  }
 }
