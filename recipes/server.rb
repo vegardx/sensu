@@ -39,7 +39,7 @@ packages.each do |pkg|
     package pkg
 end
 
-gems = %w{ sensu-plugin hipchat timeout }
+gems = %w{ sensu-plugin hipchat timeout redphone }
 
 gems.each do |gem|
     gem_package gem
