@@ -98,18 +98,18 @@
         },
         "check_critical": {
             "notification": "Critical Check Triggered",
-            "occurrences": 1,
+            "occurrences": 10,
             "command": "check-file-exists.rb -c /tmp/critical",
             "subscribers": [ "base" ],
-            "interval": 60,
+            "interval": 5,
             "handlers": ["default"]
         },
         "check_warning": {
             "notification": "Warning Check Triggered",
-            "occurrences": 1,
+            "occurrences": 10,
             "command": "check-file-exists.rb -w /tmp/warning",
             "subscribers": [ "base" ],
-            "interval": 60,
+            "interval": 5,
             "handlers": ["default"]
         },
         "check_hardware_fail": {
