@@ -27,7 +27,7 @@
         "check_raid": {
             "notification": "RAID",
             "occurrences": 1,
-            "command": "/usr/lib/nagios/plugins/check_raid",
+            "command": "check-raid.rb",
             "subscribers": [ "base" ],
             "interval": 60,
             "handlers": ["default"]
@@ -40,7 +40,7 @@
             "interval": 60,
             "handlers": ["default"]
         },
-        "check_ssh": {
+        "check_ntp": {
             "notification": "NTP",
             "occurrences": 4,
             "command": "/usr/lib/nagios/plugins/check_ntp_peer -w 0.10 -c 1.0 -H localhost -W 4 -C 6",
@@ -59,7 +59,7 @@
         "check_memory": {
             "notification": "Memory",
             "occurrences": 4,
-            "command": "check-mem.sh -w 250 -c 100",
+            "command": "check-mem.sh -w 50 -c 30",
             "subscribers": [ "base" ],
             "interval": 60,
             "handlers": ["default"]
@@ -91,7 +91,7 @@
         "check_reboot_required": {
             "notification": "Reboot Required",
             "occurrences": 1,
-            "command": "/usr/lib/nagios/plugins/check_file_exists -w /var/run/reboot-required",
+            "command": "check-file-exists.sh -w /var/run/reboot-required",
             "subscribers": [ "base" ],
             "interval": 60,
             "handlers": ["default"]
