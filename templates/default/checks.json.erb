@@ -91,7 +91,7 @@
         "check_reboot_required": {
             "notification": "Reboot Required",
             "occurrences": 1,
-            "command": "check-file-exists.sh -w /var/run/reboot-required",
+            "command": "check-file-exists.sh /var/run/reboot-required",
             "subscribers": [ "base" ],
             "interval": 60,
             "handlers": ["default"]
