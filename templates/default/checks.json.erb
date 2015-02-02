@@ -26,8 +26,32 @@
         },
         "check_raid": {
             "notification": "RAID",
+            "occurrences": 1,
+            "command": "/usr/lib/nagios/plugins/check_raid",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_ssh": {
+            "notification": "SSH",
             "occurrences": 4,
-            "command": "check-raid.rb",
+            "command": "/usr/lib/nagios/plugins/check_ssh localhost",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_ssh": {
+            "notification": "NTP",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_ntp_peer -w 0.10 -c 1.0 -H localhost -W 4 -C 6",
+            "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_users": {
+            "notification": "Users",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_users -w 3 -c 5",
             "subscribers": [ "base" ],
             "interval": 60,
             "handlers": ["default"]
@@ -48,26 +72,10 @@
             "interval": 60,
             "handlers": ["default"]
         },
-        "check_disk_fail": {
-            "notification": "SMART Failure",
-            "occurrences": 1,
-            "command": "check-disk-fail.rb",
-            "subscribers": [ "base" ],
-            "interval": 60,
-            "handlers": ["default"]
-        },
         "check_disks": {
             "notification": "Disk Space",
             "occurrences": 4,
-            "command": "check-disk.rb",
-            "subscribers": [ "base" ],
-            "interval": 60,
-            "handlers": ["default"]
-        },
-        "check_hardware_fail": {
-            "notification": "Hardware Failure",
-            "occurrences": 1,
-            "command": "check-hardware-fail.rb",
+            "command": "/usr/lib/nagios/plugins/check_disk -w 70 -c 90 -p /",
             "subscribers": [ "base" ],
             "interval": 60,
             "handlers": ["default"]
@@ -83,8 +91,24 @@
         "check_reboot_required": {
             "notification": "Reboot Required",
             "occurrences": 1,
-            "command": "check-file-exists.rb -w /var/run/reboot-required",
+            "command": "/usr/lib/nagios/plugins/check_file_exists -w /var/run/reboot-required",
             "subscribers": [ "base" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_hardware_fail": {
+            "notification": "Hardware Failure",
+            "occurrences": 1,
+            "command": "check-hardware-fail.rb",
+            "subscribers": [ "metal" ],
+            "interval": 60,
+            "handlers": ["default"]
+        },
+        "check_disk_fail": {
+            "notification": "SMART Failure",
+            "occurrences": 1,
+            "command": "check-disk-fail.rb",
+            "subscribers": [ "metal" ],
             "interval": 60,
             "handlers": ["default"]
         }

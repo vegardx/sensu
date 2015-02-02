@@ -68,7 +68,15 @@ template "/etc/sensu/conf.d/client.json" do
         notifies :restart, resources(:service => "sensu-client"), :delayed
 end
 
-%w{ check-cpu.rb check-disk-fail.rb check-disk.rb check-entropy.rb check-hardware-fail.rb check-mem.sh check-raid.rb check-http.rb check-file-exists.rb check-chef.sh }.each do |item|
+template "/etc/sensu/conf.d/standalone.json" do
+    source "standalone.json.erb"
+    mode 0644
+    owner   "root"
+    group   "root"
+    notifies :restart, resources(:service => "sensu-client"), :delayed
+end
+
+%w{ check-cpu.rb check-disk-fail.rbcheck-hardware-fail.rb check-mem.sh check-http.rb check-chef.sh }.each do |item|
         cookbook_file "#{item}" do
                 path "/etc/sensu/plugins/#{item}"
                 action :create
