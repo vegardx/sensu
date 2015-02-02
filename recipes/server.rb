@@ -165,6 +165,35 @@ template "/etc/sensu/conf.d/checks.json" do
     notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
+# PagerDuty-integration
+cookbook_file "pagerduty.rb" do
+        path "/etc/sensu/handlers/pagerduty.rb"
+        action :create
+        mode 0755
+        owner "root"
+        group "root"
+        notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
+end
+
+template "/etc/sensu/conf.d/pagerduty.json" do
+        source "pagerduty.json.erb"
+        mode 0644
+        owner   "root"
+        group   "root"
+        notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
+end
+
+template "/etc/sensu/conf.d/handlers.json" do
+        source "handlers.json.erb"
+        mode 0644
+        owner   "root"
+        group   "root"
+        notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
+end
+
 # # Create folders for extensions and mutators.
 # %w{ handlers mutators }.each do |item|
 # 	directory "/etc/sensu/extensions/#{item}" do
@@ -188,35 +217,6 @@ end
 #         mode 0644
 #         owner "root"
 #         group "root"
-#         notifies :restart, resources(:service => "sensu-server"), :delayed
-#         notifies :restart, resources(:service => "sensu-api"), :delayed
-# end
-
-# # HipChat-integration
-# cookbook_file "hipchat.rb" do
-#         path "/etc/sensu/handlers/hipchat.rb"
-#         action :create
-#         mode 0755
-#         owner "root"
-#         group "root"
-#         notifies :restart, resources(:service => "sensu-server"), :delayed
-#         notifies :restart, resources(:service => "sensu-api"), :delayed
-# end
-#
-# template "/etc/sensu/conf.d/hipchat.json" do
-#         source "hipchat.json.erb"
-#         mode 0644
-#         owner   "root"
-#         group   "root"
-#         notifies :restart, resources(:service => "sensu-server"), :delayed
-#         notifies :restart, resources(:service => "sensu-api"), :delayed
-# end
-
-# template "/etc/sensu/conf.d/handlers.json" do
-#         source "handlers.json.erb"
-#         mode 0644
-#         owner   "root"
-#         group   "root"
 #         notifies :restart, resources(:service => "sensu-server"), :delayed
 #         notifies :restart, resources(:service => "sensu-api"), :delayed
 # end
