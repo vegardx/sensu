@@ -2,42 +2,42 @@
   "checks": {
     "disk_capacity_metrics": {
       "type": "metric",
-      "command": "disk-capacity-metrics.rb -s hosts.<%= node[:hostname] =%>.<%= node[:domain] =%>.disk.capacity",
+      "command": "disk-capacity-metrics.rb",
       "interval": 10,
       "subscribers": ["base"],
       "handlers": ["relay"]
     },
     "disk_metrics": {
       "type": "metric",
-      "command": "disk-metrics.rb -s hosts.<%= node[:hostname] =%>.<%= node[:domain] =%>.disk.metric",
+      "command": "disk-metrics.rb",
       "interval": 10,
       "subscribers": ["base"],
       "handlers": ["relay"]
     },
     "entropy_metrics": {
       "type": "metric",
-      "command": "entropy-metrics.rb -s hosts.<%= node[:hostname] =%>.<%= node[:domain] =%>.entropy",
+      "command": "entropy-metrics.rb",
       "interval": 10,
       "subscribers": ["base"],
       "handlers": ["relay"]
     },
     "interface_metrics": {
       "type": "metric",
-      "command": "interface-metrics.rb -s hosts.<%= node[:hostname] =%>.<%= node[:domain] =%>.interface",
+      "command": "interface-metrics.rb",
       "interval": 10,
       "subscribers": ["base"],
       "handlers": ["relay"]
     },
     "load_metrics": {
       "type": "metric",
-      "command": "load-metrics.rb -s hosts.<%= node[:hostname] =%>.<%= node[:domain] =%>.load_avg",
+      "command": "load-metrics.rb",
       "interval": 10,
       "subscribers": ["base"],
       "handlers": ["relay"]
     },
     "memory_metrics": {
       "type": "metric",
-      "command": "memory-metrics.rb -s hosts.<%= node[:hostname] =%>.<%= node[:domain] =%>.memory",
+      "command": "memory-metrics.rb",
       "interval": 10,
       "subscribers": ["base"],
       "handlers": ["relay"]

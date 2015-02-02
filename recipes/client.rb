@@ -68,23 +68,7 @@ template "/etc/sensu/conf.d/client.json" do
         notifies :restart, resources(:service => "sensu-client"), :delayed
 end
 
-template "/etc/sensu/conf.d/client-check.json" do
-	source "client-checks.json.erb"
-	mode 0644
-	owner "root"
-	group "root"
-	notifies :restart, resources(:service => "sensu-client"), :delayed
-end
-
-template "/etc/sensu/conf.d/metrics.json" do
-	source "metrics.json.erb"
-	mode 0644
-	owner "root"
-	group "root"
-	notifies :restart, resources(:service => "sensu-client"), :delayed
-end
-
-%w{ disk-capacity-metrics.rb disk-metrics.rb entropy-metrics.rb interface-metrics.rb load-metrics.rb memory-metrics.rb }.each do |item|
+%w{ disk-capacity-metrics.rb disk-metrics.rb entropy-metrics.rb interface-metrics.rb load-metrics.rb memory-metrics.rb metrics-curl.rb }.each do |item|
         cookbook_file "#{item}" do
                 path "/etc/sensu/plugins/#{item}"
                 action :create
@@ -95,7 +79,7 @@ end
         end
 end
 
-%w{ check-cpu.rb check-disk-fail.rb check-disk.rb check-entropy.rb check-hardware-fail.rb check-mem.sh check-raid.rb }.each do |item|
+%w{ check-cpu.rb check-disk-fail.rb check-disk.rb check-entropy.rb check-hardware-fail.rb check-mem.sh check-raid.rb check-http.rb check-file-exists.rb }.each do |item|
         cookbook_file "#{item}" do
                 path "/etc/sensu/plugins/#{item}"
                 action :create

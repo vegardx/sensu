@@ -49,8 +49,32 @@
       "command": "check-hardware-fail.rb",
       "subscribers": [ "base" ],
       "interval": 60
+    },
+    "check_dns_fqdn": {
+      "command": "/usr/lib/nagios/plugins/check_dig -l :::chef.fqdn::: -H 8.8.8.8 -a :::chef.ipaddress:::",
+      "subscribers": [ "base" ],
+      "interval": 60
+    },
+    "check_reboot_required": {
+      "command": "check-file-exists.rb -w /var/run/reboot-required",
+      "subscribers": [ "base" ],
+      "interval": 60
+    },
+    "check_critical": {
+      "command": "check-file-exists.rb -c /var/critical",
+      "subscribers": [ "base" ],
+      "interval": 60,
+      "handlers": [
+        "hipchat" 
+      ]
+    },
+    "check_warning": {
+      "command": "check-file-exists.rb -w /var/warning",
+      "subscribers": [ "base" ],
+      "interval": 60,
+      "handlers": [
+        "hipchat" 
+      ]
     }
   }
 }
-
-

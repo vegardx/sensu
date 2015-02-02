@@ -33,10 +33,16 @@ apt_repository 'rabbitmq' do
   key          'http://www.rabbitmq.com/rabbitmq-signing-key-public.asc'
 end
 
-packages = %w{redis-server erlang-nox rabbitmq-server}
+packages = %w{ redis-server erlang-nox rabbitmq-server ruby1.9.1-dev build-essential }
 
 packages.each do |pkg|
 	package pkg
+end
+
+gems = %w{ sensu-plugin hipchat timeout }
+
+gems.each do |gem|
+	gem_package gem
 end
 
 service "sensu-server" do
@@ -163,6 +169,34 @@ cookbook_file "metrics.rb" do
         notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
+cookbook_file "hipchat.rb" do
+        path "/etc/sensu/handlers/hipchat.rb"
+        action :create
+        mode 0755
+        owner "root"
+        group "root"
+        notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
+end
+
+template "/etc/sensu/conf.d/hipchat.json" do
+        source "hipchat.json.erb"
+        mode 0644
+        owner   "root"
+        group   "root"
+        notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
+end
+
+template "/etc/sensu/conf.d/handlers.json" do
+        source "handlers.json.erb"
+        mode 0644
+        owner   "root"
+        group   "root"
+        notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
+end
+
 template "/etc/sensu/conf.d/relay.json" do
         source "relay.json.erb"
         mode 0644
@@ -186,6 +220,15 @@ template "/etc/sensu/conf.d/checks.json" do
         mode 0644
         owner   "root"
         group   "root"
+        notifies :restart, resources(:service => "sensu-server"), :delayed
+        notifies :restart, resources(:service => "sensu-api"), :delayed
+end
+
+template "/etc/sensu/conf.d/metrics.json" do
+        source "metrics.json.erb"
+        mode 0644
+        owner "root"
+        group "root"
         notifies :restart, resources(:service => "sensu-server"), :delayed
         notifies :restart, resources(:service => "sensu-api"), :delayed
 end
