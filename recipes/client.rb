@@ -47,16 +47,16 @@ end
 #     end
 # end
 
-# We should comment code so we know what the fuck is going on
-directory "/etc/sensu/ssl" do
-	recursive true
-end
-
-%w{ cert key }.each do |item|
-    file "/etc/sensu/ssl/#{item}.pem" do
-        content sensu["client"][item]
-    end
-end
+# # We should comment code so we know what the fuck is going on
+# directory "/etc/sensu/ssl" do
+# 	recursive true
+# end
+#
+# %w{ cert key }.each do |item|
+#     file "/etc/sensu/ssl/#{item}.pem" do
+#         content sensu["client"][item]
+#     end
+# end
 
 sensu_server = search(:node, 'role:sensu-server')
 node.set[:sensu][:rabbitmq][:password] = sensu_server.first['sensu']["rabbitmq"]["password"]
