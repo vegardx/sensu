@@ -35,15 +35,26 @@ service "sensu-client" do
         supports :status => true, :restart => true, :reload => true, :stop => true
 end
 
+# directory "/etc/sensu/ssl" do
+#         recursive true
+# end
+#
+# %w{ cert key }.each do |item|
+#     file "/etc/sensu/ssl/#{item}.pem" do
+#         content sensu["client"][item]
+#         mode "0644"
+#         notifies :restart, resources(:service => "sensu-client"), :delayed
+#     end
+# end
+
+# We should comment code so we know what the fuck is going on
 directory "/etc/sensu/ssl" do
-        recursive true
+	recursive true
 end
 
 %w{ cert key }.each do |item|
     file "/etc/sensu/ssl/#{item}.pem" do
         content sensu["client"][item]
-        mode "0644"
-        notifies :restart, resources(:service => "sensu-client"), :delayed
     end
 end
 
