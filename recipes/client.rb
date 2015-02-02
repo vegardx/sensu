@@ -35,28 +35,17 @@ service "sensu-client" do
         supports :status => true, :restart => true, :reload => true, :stop => true
 end
 
-# directory "/etc/sensu/ssl" do
-#         recursive true
-# end
-#
-# %w{ cert key }.each do |item|
-#     file "/etc/sensu/ssl/#{item}.pem" do
-#         content sensu["client"][item]
-#         mode "0644"
-#         notifies :restart, resources(:service => "sensu-client"), :delayed
-#     end
-# end
+directory "/etc/sensu/ssl" do
+        recursive true
+end
 
-# # We should comment code so we know what the fuck is going on
-# directory "/etc/sensu/ssl" do
-# 	recursive true
-# end
-#
-# %w{ cert key }.each do |item|
-#     file "/etc/sensu/ssl/#{item}.pem" do
-#         content sensu["client"][item]
-#     end
-# end
+%w{ cert key }.each do |item|
+    file "/etc/sensu/ssl/#{item}.pem" do
+        content sensu["client"][item]
+        mode "0644"
+        notifies :restart, resources(:service => "sensu-client"), :delayed
+    end
+end
 
 sensu_server = search(:node, 'role:sensu-server')
 node.set[:sensu][:rabbitmq][:password] = sensu_server.first['sensu']["rabbitmq"]["password"]
@@ -79,6 +68,17 @@ template "/etc/sensu/conf.d/client.json" do
         notifies :restart, resources(:service => "sensu-client"), :delayed
 end
 
+%w{ check-cpu.rb check-disk-fail.rb check-disk.rb check-entropy.rb check-hardware-fail.rb check-mem.sh check-raid.rb check-http.rb check-file-exists.rb check-chef.sh }.each do |item|
+        cookbook_file "#{item}" do
+                path "/etc/sensu/plugins/#{item}"
+                action :create
+                mode 0755
+                owner "root"
+                group "root"
+		notifies :restart, resources(:service => "sensu-client"), :delayed
+        end
+end
+
 # We don't yet implement metrics in Sensu
 # %w{ disk-capacity-metrics.rb disk-metrics.rb entropy-metrics.rb interface-metrics.rb load-metrics.rb memory-metrics.rb metrics-curl.rb }.each do |item|
 #         cookbook_file "#{item}" do
@@ -90,14 +90,3 @@ end
 #                 notifies :restart, resources(:service => "sensu-client"), :delayed
 #         end
 # end
-
-%w{ check-cpu.rb check-disk-fail.rb check-disk.rb check-entropy.rb check-hardware-fail.rb check-mem.sh check-raid.rb check-http.rb check-file-exists.rb check-chef.sh }.each do |item|
-        cookbook_file "#{item}" do
-                path "/etc/sensu/plugins/#{item}"
-                action :create
-                mode 0755
-                owner "root"
-                group "root"
-		notifies :restart, resources(:service => "sensu-client"), :delayed
-        end
-end
