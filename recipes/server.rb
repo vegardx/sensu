@@ -166,8 +166,8 @@ template "/etc/sensu/conf.d/checks.json" do
 end
 
 # PagerDuty-integration
-cookbook_file "pagerduty.rb" do
-        path "/etc/sensu/handlers/pagerduty.rb"
+cookbook_file "victorops.rb" do
+        path "/etc/sensu/handlers/victorops.rb"
         action :create
         mode 0755
         owner "root"
@@ -176,8 +176,8 @@ cookbook_file "pagerduty.rb" do
         notifies :restart, resources(:service => "sensu-api"), :delayed
 end
 
-template "/etc/sensu/conf.d/pagerduty.json" do
-        source "pagerduty.json.erb"
+template "/etc/sensu/conf.d/victorops.json" do
+        source "victorops.json.erb"
         mode 0644
         owner   "root"
         group   "root"
