@@ -98,19 +98,19 @@
         },
         "check_critical": {
             "notification": "Critical Check Triggered",
-            "occurrences": 1,
+            "occurrences": 10,
             "command": "check-file-exists.rb -c /tmp/critical",
             "subscribers": [ "base" ],
-            "interval": 5,
+            "interval": 10,
             "refresh": 0,
             "handlers": ["victorops"]
         },
         "check_warning": {
             "notification": "Warning Check Triggered",
-            "occurrences": 1,
+            "occurrences": 10,
             "command": "check-file-exists.rb -w /tmp/warning",
             "subscribers": [ "base" ],
-            "interval": 5,
+            "interval": 10,
             "refresh": 0,
             "handlers": ["victorops"]
         },
