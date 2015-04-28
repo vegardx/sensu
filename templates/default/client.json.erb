@@ -2,11 +2,18 @@
   "client": {
     "name": "<%= node[:fqdn] %>",
     "address": "<%= node[:ipaddress] %>",
-    "platform": "<%= node[:platform] %> <%= node[:platform_version] %>",
     "subscriptions": [
     <% node.run_list.roles.each do |role| %>
       "<%= role =%>",
     <% end %>
       "base"
-    ]
+    ],
+    "keepalive": {
+        "thresholds": {
+            "warning": 60,
+            "critical": 300
+        },
+        "handlers": [ "victorops" ],
+        "refresh": 60
+    }
 }

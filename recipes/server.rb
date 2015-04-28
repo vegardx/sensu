@@ -45,6 +45,22 @@ gems.each do |gem|
     gem_package gem
 end
 
+# Build a list of all clients registered in chef with the sensu-client role
+clients = Array.new
+
+search(:node, "role:sensu-client") do |client|
+    clients << client
+end
+
+nameservers = Array.new
+
+search(:node, "role:NS") do |nameserver|
+    nameservers << nameserver
+end
+
+# Load data bags containing HTTP(/S) checks
+httpcheck = data_bag_item("sensu", "httpcheck")
+
 service "sensu-server" do
     action [ :enable ]
     supports :status => true, :restart => true, :reload => true, :stop => true
@@ -163,6 +179,7 @@ template "/etc/sensu/conf.d/checks.json" do
     group   "root"
     notifies :restart, resources(:service => "sensu-server"), :delayed
     notifies :restart, resources(:service => "sensu-api"), :delayed
+    variables :clients => clients, :httpcheck => httpcheck
 end
 
 # PagerDuty-integration

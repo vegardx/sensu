@@ -1,6 +1,6 @@
 {
     "checks": {
-        "check_dns": {
+        "check_dns_<%= node[:fqdn] %>": {
             "notifications": "DNS Serviceaddress",
             "occurrences": 4,
             "command": "/usr/lib/nagios/plugins/check_dig -l <%= node[:fqdn] %> -H 8.8.8.8 -a <%= node[:ipaddress] %>",

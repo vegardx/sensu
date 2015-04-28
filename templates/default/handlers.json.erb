@@ -1,8 +1,12 @@
 {
-  "handlers": {
-      "victorops": {
-          "type": "pipe",
-          "command": "/etc/sensu/handlers/victorops.rb"
-      }
-  }
+    "handlers": {
+        "victorops": {
+            "type": "pipe",
+            "command": "/etc/sensu/handlers/victorops.rb",
+            "severities": [
+                "critical",
+                "ok"
+            ]
+        }
+    }
 }

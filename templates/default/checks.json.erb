@@ -1,12 +1,99 @@
 {
     "checks": {
+        <% @clients.each do |node| %>
+        "check_dns_<%= node[:fqdn].gsub(".", "_") %>": {
+            "notifications": "DNS Serviceaddress failure on <%= node[:fqdn] %>",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_dig -l <%= node[:fqdn] %> -H 8.8.8.8 -a <%= node[:ipaddress] %>",
+            "subscribers": [ "sensu-server" ],
+            "interval": 300,
+            "refresh": 0,
+            "handlers": ["victorops"]
+        },
+        <% end %>
+        <% @httpcheck['http'].each do |target| %>
+        "check_http_<%= target.gsub(".", "_") %>": {
+            "notification": "HTTP returned non-200 value for <%= target %>",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_http -H <%= target %> -w 5 -c 10",
+            "subscribers": [ "sensu-server" ],
+            "interval": 300,
+            "refresh": 0,
+            "handlers": ["victorops"]
+        },
+        <% end %>
+        <% @httpcheck['https'].each do |target| %>
+        "check_tls_<%= target.gsub(".", "_") %>": {
+            "notification": "TLS certificate about to expire on <%= target %>",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_tcp -H <%= target %> -p 443 -S -D 10,5",
+            "subscribers": [ "sensu-server" ],
+            "interval": 300,
+            "refresh": 0,
+            "handlers": ["victorops"]
+        },
+        <% end %>
+        <% @httpcheck['endpoint'].each do |target| %>
+        "check_fping_<%= target.gsub(".", "_") %>": {
+            "notification": "Packet loss / High latency on <%= target %>",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_fping -H <%= target %> -n 3 -T 150 -i 50 -w 300,30% -c 500,50%",
+            "subscribers": [ "sensu-server" ],
+            "interval": 60,
+            "refresh": 0,
+            "handlers": ["victorops"]
+        },
+        <% end %>
+        <% @clients.each do |node| %>
+        "check_dns_<%= node[:fqdn].gsub(".", "_") %>": {
+            "notifications": "Unable to connect to SSH <%= node[:fqdn] %>",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_ssh <%= node[:fqdn] %>",
+            "subscribers": [ "sensu-server" ],
+            "interval": 600,
+            "refresh": 0,
+            "handlers": ["victorops"]
+        },
+        <% end %>
+        "check_nginx": {
+            "notification": "Nginx failed health check",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_http -H localhost -u /health-check",
+            "subscribers": [ "LEMP" ],
+            "interval": 60,
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
+        },
+        "check_fpm": {
+            "notification": "PHP failed health check",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_http -H localhost -u /ping",
+            "subscribers": [ "LEMP" ],
+            "interval": 60,
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
+        },
+        "check_mysql": {
+            "notification": "MySQL failed health check",
+            "occurrences": 4,
+            "command": "/usr/lib/nagios/plugins/check_mysql -udeploy -pdeploy",
+            "subscribers": [ "LEMP" ],
+            "interval": 60,
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
+        },
         "check_apt": {
             "notification": "Packages available for upgrade",
             "occurrences": 4,
             "command": "/usr/lib/nagios/plugins/check_apt",
             "subscribers": [ "base" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_apt_distupgrade": {
             "notification": "Packages available for dist-upgrade",
@@ -14,7 +101,9 @@
             "command": "/usr/lib/nagios/plugins/check_apt -d",
             "subscribers": [ "base" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_load": {
             "notification": "Load",
@@ -22,31 +111,29 @@
             "command": "/usr/lib/nagios/plugins/check_load -w 15,10,5 -c 30,25,20",
             "subscribers": [ "base" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_raid": {
-            "notification": "RAID",
+            "notification": "RAID in degraded state",
             "occurrences": 1,
             "command": "check-raid.rb",
             "subscribers": [ "base" ],
             "interval": 60,
-            "handlers": ["default"]
-        },
-        "check_ssh": {
-            "notification": "SSH",
-            "occurrences": 4,
-            "command": "/usr/lib/nagios/plugins/check_ssh localhost",
-            "subscribers": [ "base" ],
-            "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_ntp": {
-            "notification": "NTP",
+            "notification": "NTP out of sync",
             "occurrences": 4,
             "command": "/usr/lib/nagios/plugins/check_ntp_peer -w 0.10 -c 1.0 -H localhost -W 4 -C 6",
             "subscribers": [ "base" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_users": {
             "notification": "Users",
@@ -54,15 +141,19 @@
             "command": "/usr/lib/nagios/plugins/check_users -w 3 -c 5",
             "subscribers": [ "base" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_memory": {
-            "notification": "Memory",
+            "notification": "Memory running low",
             "occurrences": 4,
             "command": "check-mem.sh -w 50 -c 30",
             "subscribers": [ "base" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_cpu": {
             "notification": "CPU Usage",
@@ -70,7 +161,9 @@
             "command": "check-cpu.rb",
             "subscribers": [ "base" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_disks": {
             "notification": "Disk Space",
@@ -78,7 +171,9 @@
             "command": "/usr/lib/nagios/plugins/check_disk -w 70 -c 90 -p /",
             "subscribers": [ "base" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_chef": {
             "notification": "Chef",
@@ -86,7 +181,9 @@
             "command": "check-chef.sh",
             "subscribers": [ "base" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_reboot_required": {
             "notification": "Reboot Required",
@@ -94,24 +191,28 @@
             "command": "check-file-exists.rb -w /var/run/reboot-required",
             "subscribers": [ "base" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_critical": {
             "notification": "Critical Check Triggered",
-            "occurrences": 10,
+            "occurrences": 1,
             "command": "check-file-exists.rb -c /tmp/critical",
             "subscribers": [ "base" ],
             "interval": 10,
             "refresh": 0,
+            "dependencies": [ "keepalive" ],
             "handlers": ["victorops"]
         },
         "check_warning": {
             "notification": "Warning Check Triggered",
-            "occurrences": 10,
+            "occurrences": 1,
             "command": "check-file-exists.rb -w /tmp/warning",
             "subscribers": [ "base" ],
             "interval": 10,
             "refresh": 0,
+            "dependencies": [ "keepalive" ],
             "handlers": ["victorops"]
         },
         "check_hardware_fail": {
@@ -120,7 +221,9 @@
             "command": "check-hardware-fail.rb",
             "subscribers": [ "metal" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         },
         "check_disk_fail": {
             "notification": "SMART Failure",
@@ -128,7 +231,19 @@
             "command": "check-disk-fail.rb",
             "subscribers": [ "metal" ],
             "interval": 60,
-            "handlers": ["default"]
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
+        },
+        "check_backuppc": {
+            "notification": "BackupPC",
+            "occurrences": 1,
+            "command": "/usr/bin/sudo -u backuppc /usr/lib/nagios/plugins/check_backuppc -v",
+            "subscribers": [ "Backuppc-server" ],
+            "interval": 60,
+            "refresh": 0,
+            "dependencies": [ "keepalive" ],
+            "handlers": ["victorops"]
         }
     }
 }

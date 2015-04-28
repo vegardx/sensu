@@ -1,0 +1,32 @@
+{
+  "name": "sensu",
+  "version": "1.0.0",
+  "description": "Configures sensu-server and sensu-clients",
+  "long_description": "",
+  "maintainer": "Vegard Hansen",
+  "maintainer_email": "vegard.x@gmail.com",
+  "license": "Apache 2.0",
+  "platforms": {
+    "debian": ">= 0.0.0"
+  },
+  "dependencies": {
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+    "sensu::server": "Installs and configures the sensu-server",
+    "sensu::client": "Installs and configures sensu-clients"
+  }
+}
