@@ -1,7 +1,7 @@
 {
     "checks": {
         <% @clients.each do |node| %>
-        "check_dns_<%= node[:fqdn].gsub(".", "_") %>": {
+        "probe_dns_<%= node[:fqdn].gsub(".", "_") %>": {
             "notifications": "DNS Serviceaddress failure on <%= node[:fqdn] %>",
             "occurrences": 4,
             "command": "/usr/lib/nagios/plugins/check_dig -l <%= node[:fqdn] %> -H 8.8.8.8 -a <%= node[:ipaddress] %>",
@@ -11,8 +11,8 @@
             "handlers": ["victorops"]
         },
         <% end %>
-        <% @httpcheck['http'].each do |target| %>
-        "check_http_<%= target.gsub(".", "_") %>": {
+        <% @probe['http'].each do |target| %>
+        "probe_http_<%= target.gsub(".", "_") %>": {
             "notification": "HTTP returned non-200 value for <%= target %>",
             "occurrences": 4,
             "command": "/usr/lib/nagios/plugins/check_http -H <%= target %> -w 5 -c 10",
@@ -22,8 +22,8 @@
             "handlers": ["victorops"]
         },
         <% end %>
-        <% @httpcheck['https'].each do |target| %>
-        "check_tls_<%= target.gsub(".", "_") %>": {
+        <% @probe['https'].each do |target| %>
+        "probe_tls_<%= target.gsub(".", "_") %>": {
             "notification": "TLS certificate about to expire on <%= target %>",
             "occurrences": 4,
             "command": "/usr/lib/nagios/plugins/check_tcp -H <%= target %> -p 443 -S -D 10,5",
@@ -33,8 +33,8 @@
             "handlers": ["victorops"]
         },
         <% end %>
-        <% @httpcheck['endpoint'].each do |target| %>
-        "check_fping_<%= target.gsub(".", "_") %>": {
+        <% @probe['icmp'].each do |target| %>
+        "probe_icmp_<%= target.gsub(".", "_") %>": {
             "notification": "Packet loss / High latency on <%= target %>",
             "occurrences": 4,
             "command": "/usr/lib/nagios/plugins/check_fping -H <%= target %> -n 3 -T 150 -i 50 -w 300,30% -c 500,50%",
@@ -45,7 +45,7 @@
         },
         <% end %>
         <% @clients.each do |node| %>
-        "check_dns_<%= node[:fqdn].gsub(".", "_") %>": {
+        "probe_ssh_<%= node[:fqdn].gsub(".", "_") %>": {
             "notifications": "Unable to connect to SSH <%= node[:fqdn] %>",
             "occurrences": 4,
             "command": "/usr/lib/nagios/plugins/check_ssh <%= node[:fqdn] %>",
@@ -118,7 +118,7 @@
         "check_raid": {
             "notification": "RAID in degraded state",
             "occurrences": 1,
-            "command": "check-raid.rb",
+            "command": "/etc/sensu/plugins/check-raid.rb",
             "subscribers": [ "base" ],
             "interval": 60,
             "refresh": 0,
@@ -148,7 +148,7 @@
         "check_memory": {
             "notification": "Memory running low",
             "occurrences": 4,
-            "command": "check-mem.sh -w 50 -c 30",
+            "command": "/etc/sensu/plugins/check-mem.sh -w 50 -c 30",
             "subscribers": [ "base" ],
             "interval": 60,
             "refresh": 0,
@@ -158,7 +158,7 @@
         "check_cpu": {
             "notification": "CPU Usage",
             "occurrences": 4,
-            "command": "check-cpu.rb",
+            "command": "/etc/sensu/plugins/check-cpu.rb",
             "subscribers": [ "base" ],
             "interval": 60,
             "refresh": 0,
@@ -178,7 +178,7 @@
         "check_chef": {
             "notification": "Chef",
             "occurrences": 15,
-            "command": "check-chef.sh",
+            "command": "/etc/sensu/plugins/check-chef.sh",
             "subscribers": [ "base" ],
             "interval": 60,
             "refresh": 0,
@@ -188,7 +188,7 @@
         "check_reboot_required": {
             "notification": "Reboot Required",
             "occurrences": 1,
-            "command": "check-file-exists.rb -w /var/run/reboot-required",
+            "command": "/etc/sensu/plugins/check-file-exists.sh -w /var/run/reboot-required",
             "subscribers": [ "base" ],
             "interval": 60,
             "refresh": 0,
@@ -198,7 +198,7 @@
         "check_critical": {
             "notification": "Critical Check Triggered",
             "occurrences": 1,
-            "command": "check-file-exists.rb -c /tmp/critical",
+            "command": "/etc/sensu/plugins/check-file-exists.sh -c /tmp/critical",
             "subscribers": [ "base" ],
             "interval": 10,
             "refresh": 0,
@@ -208,7 +208,7 @@
         "check_warning": {
             "notification": "Warning Check Triggered",
             "occurrences": 1,
-            "command": "check-file-exists.rb -w /tmp/warning",
+            "command": "/etc/sensu/plugins/check-file-exists.sh -w /tmp/warning",
             "subscribers": [ "base" ],
             "interval": 10,
             "refresh": 0,
@@ -218,7 +218,7 @@
         "check_hardware_fail": {
             "notification": "Hardware Failure",
             "occurrences": 1,
-            "command": "check-hardware-fail.rb",
+            "command": "/etc/sensu/plugins/check-hardware-fail.rb",
             "subscribers": [ "metal" ],
             "interval": 60,
             "refresh": 0,
@@ -228,7 +228,7 @@
         "check_disk_fail": {
             "notification": "SMART Failure",
             "occurrences": 1,
-            "command": "check-disk-fail.rb",
+            "command": "/etc/sensu/plugins/check-disk-fail.rb",
             "subscribers": [ "metal" ],
             "interval": 60,
             "refresh": 0,

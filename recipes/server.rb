@@ -59,7 +59,7 @@ search(:node, "role:NS") do |nameserver|
 end
 
 # Load data bags containing HTTP(/S) checks
-httpcheck = data_bag_item("sensu", "httpcheck")
+probe = data_bag_item("sensu", "probe")
 
 service "sensu-server" do
     action [ :enable ]
@@ -179,7 +179,7 @@ template "/etc/sensu/conf.d/checks.json" do
     group   "root"
     notifies :restart, resources(:service => "sensu-server"), :delayed
     notifies :restart, resources(:service => "sensu-api"), :delayed
-    variables :clients => clients, :httpcheck => httpcheck
+    variables :clients => clients, :probe => probe
 end
 
 # PagerDuty-integration
